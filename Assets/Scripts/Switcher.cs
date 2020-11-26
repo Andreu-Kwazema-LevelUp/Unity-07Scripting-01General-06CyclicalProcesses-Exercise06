@@ -1,16 +1,27 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class Switcher : MonoBehaviour
 {
     public bool IsSwitched { get; private set; }
 
-    public delegate void SwitchedHandler();
+    #region Events
 
-    public event SwitchedHandler SwitchChange;
+    public UnityEvent SwitchChangeEvent;
+
+    #endregion
+
+
+    #region Unity Methods
 
     private void Start()
     {
         IsSwitched = false;
+    }
+
+    private void OnDisable()
+    {
+        SwitchChangeEvent.RemoveAllListeners(); //Es correcto?
     }
 
     private void OnTriggerEnter()
@@ -23,11 +34,11 @@ public class Switcher : MonoBehaviour
         }
     }
 
+    #endregion
+
+
     private void OnSwitchChange()
     {
-        if (SwitchChange != null)
-        {
-            SwitchChange.Invoke();
-        }
+        SwitchChangeEvent?.Invoke();
     }
 }
